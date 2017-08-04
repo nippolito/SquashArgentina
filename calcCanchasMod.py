@@ -455,43 +455,89 @@ def TestsImagenes():
 
 	mostrarDatos(PosibleTorneo2, Posadas)
 
-Posadas = Sede(4)
+def PosadasHastaAhora():
+	Posadas = Sede(4)
 
-Cab1 = Categoria("Cab Primera", 1, 22, 16, "Zonas")
-CabInt = Categoria("Cab Int", 1, 13, 8, "Zonas")
-Cab2 = Categoria("Cab Segunda", 1, 19, 8, "Zonas")
-Cab3 = Categoria("Cab Tercera", 1, 11, 8, "Zonas")
-Cab4 = Categoria("Cab Cuarta", 1, 15, 8, "Zonas")
-Cab5 = Categoria("Cab Quinta", 1, 12, 8, "Zonas")
-Cab6 = Categoria("Cab Sexta", 1, 8, 8, "Zonas")
-Cab7 = Categoria("Cab Séptima", 1, 5, 4, "ElimDirec")
-Dam1 = Categoria("Dam Primera", 1, 6, 4, "Zonas")
-Dam2 = Categoria("Dam Segunda", 1, 7, 4, "Zonas")
-Dam3 = Categoria("Dam Tercera", 1, 10, 4, "Zonas")
+	Cab1 = Categoria("Cab Primera", 1, 15, 16, "Zonas")
+	CabInt = Categoria("Cab Int", 1, 8, 4, "Zonas")
+	Cab2 = Categoria("Cab Segunda", 1, 14, 16, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 30, 32, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 29, 32, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 10, 16, "ElimDirec")
+	Dam1 = Categoria("Dam Primera", 1, 9, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 8, 2, "Zonas")
+	Dam3 = Categoria("Dam Tercera", 1, 6, 2, "Zonas")
 
-cats = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5, Cab6, Cab7, Dam1, Dam2, Dam3]
-NacMenores = Torneo(cats, [17, 22], [9, 22], [9, 22], [9.5,16])
+	CabM19 = Categoria("M19 Cab", 1, 7, 4, "Zonas")
+	CabM19Pr = Categoria("M19 Cab Princ", 1, 4, 2, "Zonas")
+	CabM17 = Categoria("M17 Cab", 1, 10, 8, "Zonas")
+	CabM17Pr = Categoria("M17 Cab Princ", 1, 6, 4, "Zonas")
+	CabM15 = Categoria("M15 Cab", 1, 4, 2, "Zonas")
+	CabM15Pr = Categoria("M15 Cab Princ", 1, 13, 8, "Zonas")
+	CabM13 = Categoria("M13 Cab", 1, 4, 2, "Zonas")
+	CabM13Pr = Categoria("M13 Cab Princ", 1, 9, 8, "Zonas")
+	DamM17 = Categoria("M17 Dam", 1, 9, 8, "Zonas")
+	DamM15 = Categoria("M15 Dam", 1, 6, 4, "Zonas")
 
-mostrarDatos(NacMenores, Posadas)
+	categoriasPosadas = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5, Dam1, Dam2, Dam3,
+						 CabM19, CabM19Pr, CabM17, CabM17Pr, CabM15, CabM15Pr, CabM13, 
+						 CabM13Pr, DamM17, DamM15]
 
-Cab1c = Categoria("Cab Primera", 1, 13, 8, "Zonas")
-Cab2c = Categoria("Cab Segunda", 1, 22, 16, "Zonas")
+	NacDoblePosadas = Torneo(categoriasPosadas, [17,22], [9.5, 22], [9.5,22], [9.5, 15])
 
-cats2 = [Cab1c, Cab2c]
+	mostrarDatos(NacDoblePosadas, Posadas)
 
-PosibleTorneo1 = Torneo(cats2, [17, 22], [9, 22], [0, 0], [0, 0])
+def SaltaHastaAhora():
+	Salta = Sede(5)
 
-mostrarDatos(PosibleTorneo1, Posadas)
+	Cab1 = Categoria("Cab Primera", 1, 13, 16, "ElimDirec")
+	CabInt = Categoria("Cab Int", 1, 10, 16, "ElimDirec")
+	Cab2 = Categoria("Cab Segunda", 1, 24, 32, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 31, 32, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 33, 64, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 23, 32, "ElimDirec")
+	Cab6 = Categoria("Cab Sexta", 1, 19, 32, "ElimDirec")
+	Cab7 = Categoria("Cab Septima", 1, 18, 32, "ElimDirec")
+	Dam1 = Categoria("Dam Primera", 1, 6, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 13, 8, "Zonas")
+	Dam3 = Categoria("Dam Tercera", 1, 4, 2, "Zonas")
 
-# Ver otros Nacionales para ver mas o menos el número de inscriptos y entradas
+	categoriasSalta = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5,
+						 Cab6, Cab7, Dam1, Dam2, Dam3]
 
-# Es necesario agregar canchas el domingo
-# Para ver mas o menos cuántos inscriptos debo tener, fijarse en el TS de Tucumán
+	NacSalta = Torneo(categoriasSalta, [14,22], [14, 23], [9,22], [9.5, 13.5])
 
+	mostrarDatos(NacSalta, Salta)
 
-# Constatar con los archivos del Tournament que tengo de Posadas para ver si
-# la cantidad de partidos se acerca
+def SaltaAgregandoMas():
+	Salta = Sede(5)
 
-# NAC MENORES CÓRDOBA 2016 ----- REALES: 97 ENTRIES (64 PLAYERS); 183 MATCHES (EN REALIDAD FUE 176), 3 CANCHAS
+	Cab1 = Categoria("Cab Primera", 1, 18, 16, "ElimDirec")
+	CabInt = Categoria("Cab Int", 1, 14, 16, "ElimDirec")
+	Cab2 = Categoria("Cab Segunda", 1, 30, 32, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 38, 32, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 40, 64, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 30, 32, "ElimDirec")
+	Cab6 = Categoria("Cab Sexta", 1, 28, 32, "ElimDirec")
+	Cab7 = Categoria("Cab Septima", 1, 25, 32, "ElimDirec")
+	Dam1 = Categoria("Dam Primera", 1, 10, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 15, 8, "Zonas")
+	Dam3 = Categoria("Dam Tercera", 1, 9, 4, "Zonas")
 
-# NAC TUCUMÁN MAY Y MEN ----- 292 ENTRIES
+	categoriasSalta = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5,
+						 Cab6, Cab7, Dam1, Dam2, Dam3]
+
+	NacSalta = Torneo(categoriasSalta, [14,22], [14, 23], [9,22], [9.5, 13.5])
+
+	mostrarDatos(NacSalta, Salta)
+
+print ""
+print "ASÍ ESTÁ EL TORNEO POR AHORA"
+
+SaltaHastaAhora()
+
+print ""
+print "SI AGREGAMOS MÁS GENTE PODRÍA QUEDAR ALGO ASÍ"
+
+SaltaAgregandoMas()
+
