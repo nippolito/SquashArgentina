@@ -1,203 +1,6 @@
-# -*- coding: utf-8 -*-
-
-# #canchas, horarios, 
-
-import numpy as np
-
-class Sede(object):
-	def __init__(self, canchas):
-		self.canchas = canchas
-
-
-class Torneo(object):
-	def __init__(self, categorias, horasJu, horasVi, horasSa, horasDom):
-		self.categorias = categorias
-		self.horasJu = horasJu
-		self.horasVi = horasVi
-		self.horasSa = horasSa
-		self.horasDom = horasDom
-
-	def cantInscriptos(self):
-		res = 0
-		ct = self.categorias
-		for i in range(0, len(ct)):
-			res = res + ct[i].cantJug
-		return res
-
-	def PartTotGrupos(self):
-		res = 0
-		ct = self.categorias
-		for i in range(0, len(ct)):
-			if(ct[i].modoJuego == "Zonas"):
-				res = res + ct[i].cantPartidosCatGrupos()
-		return res
-
-	def PartTotCuadros(self):
-		res = 0
-		ct = self.categorias
-		for i in range(0, len(ct)):
-			if(ct[i].modoJuego == "Zonas"):
-				res = res + ct[i].cantPartidosCatCuadros()
-			else:
-				res = res + partidosElimDirec(ct[i].cantJug, ct[i].cuadrosCantJug)
-		return res
-
-	def PartidosTotales(self):
-		return self.PartTotGrupos() + self.PartTotCuadros()
-
-	def DomingoCantPartTot(self):
-		ct = self.categorias
-		res = 0
-		for i in range(0, len(ct)):
-			if(ct[i].cuadrosCantJug == 2):
-				res = res + 1
-			if(ct[i].cuadrosCantJug > 2):
-				res = res + 3
-		return res
-
-
-class Categoria(Torneo):
-	def __init__(self, nombre, clasifXZona, cantJug, jugXZona, cuadrosCantJug, modoJuego):
-		self.nombre = nombre
-		self.clasifXZona = clasifXZona
-		self.cantJug = cantJug
-		self.jugXZona = jugXZona
-		self.cuadrosCantJug = cuadrosCantJug
-		self.modoJuego = modoJuego
-
-	def cantZonasCat(self):
-		if(self.jugXZona == 0):
-			res = 0
-		else:
-			res = self.cantJug / self.jugXZona
-		return res
-
-	def cantPartidosCatGrupos(self):
-		res = (self.jugXZona * (self.jugXZona - 1) / 2) * self.cantZonasCat()
-		return res
-
-	def cantPartidosCatCuadros(self):
-		n = self.cuadrosCantJug
-		res = 0
-		res = self.cantPartAux(n, res)
-		return res
-
-	def cantPartAux(self, n, res):
-		if(n == 0):
-			return 0
-		if n == 2:
-			return (res + 1)
-		else:
-			return self.cantPartAux(n / 2, res + (n / 2))
-
-
-def partidosPosibles(sede, torneo):	  # ya lo testié y funciona perfecto, la última hora no la cuenta sino que finalizan allí
-	res = 0
-	for i in np.arange(torneo.horasJu[0], torneo.horasJu[1], 0.5):
-		res = res + 1 * (sede.canchas)
-	for i in np.arange(torneo.horasVi[0], torneo.horasVi[1], 0.5):
-		res = res + 1 * (sede.canchas)
-	for i in np.arange(torneo.horasSa[0], torneo.horasSa[1], 0.5):
-		res = res + 1 * (sede.canchas)
-	for i in np.arange(torneo.horasDom[0], torneo.horasDom[1], 0.5):
-		res = res + 1 * (sede.canchas)
-	return res
-
-def DomingoPartidosPosibles(sede, torneo):
-	res = 0
-	for i in np.arange(torneo.horasDom[0], torneo.horasDom[1], 0.5):
-			res = res + 1 * sede.canchas
-	return res
-
-def mostrarCatYCant(torneo):
-	ct = torneo.categorias
-	for i in range(0, len(ct)):
-		if(ct[i].modoJuego == "Zonas"):
-			print "> CAT: " + ct[i].nombre + " -- Inscriptos:",
-			print ct[i].cantJug,
-			print "> Modo juego:",
-			print ct[i].modoJuego,
-			print "-- Jug por zona:",
-			print ct[i].jugXZona,
-			print "-- #Jug en llaves:",
-			print ct[i].cuadrosCantJug
-		else:
-			print "> CAT: " + ct[i].nombre + " -- Inscriptos:",
-			print ct[i].cantJug,
-			print "> Modo juego:",
-			print ct[i].modoJuego,
-			print "-- Tamaño llave:",
-			print ct[i].cuadrosCantJug
-
-def partidosElimDirec(x, y):
-	res = 0
-	z = x
-	while(z == 32 or z == 16 or z == 8 or z == 4):
-		z = z - 1
-	res = (z - 1) + (x - z)
-	return res 
-
-def mostrarDatos(torneo, sede):
-	print ""
-	print "La cantidad de canchas en la sede es:",
-	print sede.canchas
-
-	print "Los horarios son:",
-	print "Jueves >",
-	print torneo.horasJu[0],
-	print "a",
-	print torneo.horasJu[1],
-	print "hs. Viernes >",
-	print torneo.horasVi[0],
-	print "a",
-	print torneo.horasVi[1],
-	print "hs. Sábado >",
-	print torneo.horasSa[0],
-	print "a",
-	print torneo.horasSa[1],
-	print "hs. Domingo >",
-	print torneo.horasDom[0],
-	print "a",
-	print torneo.horasDom[1],
-	print "hs."
-
-	print ""
-	print "La cantidad de inscriptos entre todas las categorías es:",
-	print torneo.cantInscriptos()
-
-	print "La cantidad de partidos totales que pueden realizarse es:",
-	print partidosPosibles(sede, torneo)
-
-	print ""
-	mostrarCatYCant(torneo)
-	print ""
-
-	print "En total habría en el torneo",
-	print torneo.PartTotGrupos(),
-	print "partidos en fase de grupos."
-
-	print "En total habría en el torneo",
-	print torneo.PartTotCuadros(),
-	print "partidos en fase de eliminación directa."
-
-	print "Esto da un total de",
-	print torneo.PartidosTotales(),
-	print "partidos en total."
-
-	print ""
-	print "Día Domingo (SF y F): Total partidos >",
-	print torneo.DomingoCantPartTot(),
-	print "partidos. Total de canchas >",
-	print DomingoPartidosPosibles(sede, torneo) 
-	print ""
-
-	print "------------------------------------------------------------------------------------------------"
+from program.calcCanchas import *
 
 def testEjemplo():
-	Pos = Sede(4)
-	Cor = Sede(3)
-
-
 	# EJEMPLO 1
 
 
@@ -216,7 +19,7 @@ def testEjemplo():
 	cats = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5, Cab6, Cab7, Dam1, Dam2, Dam3]
 	NacMenores = Torneo(cats, [17, 22], [9, 22], [9, 22], [9.5,14])
 
-	mostrarDatos(NacMenores, Pos)
+	mostrarDatos(NacMenores, 4)
 
 
 	# EJEMPLO 2
@@ -257,10 +60,10 @@ def testEjemplo():
 	cats3 = [Cab1b, Cab2b, Cab3b, Cab4b, Cab5b, Cab6b, Cab7b, Dam1b, Dam2b, Dam3b]
 	NacMayoresPosadas = Torneo(cats3, [0, 0], [17, 22], [9, 22], [9.5,14])
 
-	print "" 
-	print "<> ESTOS SON LOS DATOS DEL ÚLTIMO NACIONAL DE MAYORES DE POSADAS <>"
+	print( "")
+	print( "<> ESTOS SON LOS DATOS DEL ÚLTIMO NACIONAL DE MAYORES DE POSADAS <>")
 
-	mostrarDatos(NacMayoresPosadas, Pos)
+	mostrarDatos(NacMayoresPosadas, 4)
 
 
 	# NACIONAL DE MENORES CÓRDOBA 2016
@@ -282,15 +85,12 @@ def testEjemplo():
 						DamM17cor, CabM13Princcor, CabM15Princcor, CabM17Princcor]
 	NacMenoresCordoba = Torneo(catsCordobaMen, [0, 0], [17,22], [9, 22], [9.5,14])
 
-	print ""
-	print "<> ESTOS SON LOS DATOS DEL NACIONAL DE MENORES DE CÓRDOBA <>"
+	print( "")
+	print( "<> ESTOS SON LOS DATOS DEL NACIONAL DE MENORES DE CÓRDOBA <>")
 
-	mostrarDatos(NacMenoresCordoba, Cor)
+	mostrarDatos(NacMenoresCordoba, 3)
 
 def TestsImagenes():
-	Posadas = Sede(4)
-	Cordoba = Sede(3)
-
 	# NACIONAL DE MAYORES POSADAS 2016 + NACIONAL MENORES POSADAS 2016
 
 
@@ -326,10 +126,10 @@ def TestsImagenes():
 
 	NacMayYMenPosadas2017 = Torneo(cats4, [17,22], [9,22], [9, 22], [9.5, 14])
 
-	print ""
-	print "<> ESTOS SON LOS DATOS SI JUNTÁS LOS DOS NACIONALES DE POSADAS DEL 2016 <>"
+	print( "")
+	print( "<> ESTOS SON LOS DATOS SI JUNTÁS LOS DOS NACIONALES DE POSADAS DEL 2016 <>")
 
-	mostrarDatos(NacMayYMenPosadas2017, Posadas)
+	mostrarDatos(NacMayYMenPosadas2017, 4)
 
 
 	# EJEMPLO PARA VER CÓMO HACER PARA QUE ALCANCEN LAS CANCHAS 1
@@ -366,10 +166,10 @@ def TestsImagenes():
 
 	PosibleTorneo1 = Torneo(cats5, [17,22], [9,22], [9, 22], [9, 16])
 
-	print ""
-	print "<> POSIBLE CANTIDAD DE JUGADORES PARA POSADAS 2017 - 1 <>"
+	print( "")
+	print( "<> POSIBLE CANTIDAD DE JUGADORES PARA POSADAS 2017 - 1 <>")
 
-	mostrarDatos(PosibleTorneo1, Posadas)	# funciona con lo justo
+	mostrarDatos(PosibleTorneo1, 4)	# funciona con lo justo
 
 
 	# EJEMPLO PARA VER CÓMO HACER PARA QUE ALCANCEN LAS CANCHAS 2
@@ -406,52 +206,122 @@ def TestsImagenes():
 
 	PosibleTorneo2 = Torneo(cats6, [17,22], [9,22], [9, 22], [9, 16])
 
-	print ""
-	print "<> POSIBLE CANTIDAD DE JUGADORES PARA POSADAS 2017 - 2 <>"
+	print( "")
+	print( "<> POSIBLE CANTIDAD DE JUGADORES PARA POSADAS 2017 - 2 <>")
 
-	mostrarDatos(PosibleTorneo2, Posadas)
+	mostrarDatos(PosibleTorneo2, 4)
 
-# Posadas = Sede(4)
+def PosadasHastaAhora():
 
-# Cab1c = Categoria("Cab Primera", 1, 12, 3, 8, "Zonas")
+	Cab1 = Categoria("Cab Primera", 1, 15, 16, "Zonas")
+	CabInt = Categoria("Cab Int", 1, 8, 4, "Zonas")
+	Cab2 = Categoria("Cab Segunda", 1, 14, 16, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 30, 32, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 29, 32, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 10, 16, "ElimDirec")
+	Dam1 = Categoria("Dam Primera", 1, 9, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 8, 2, "Zonas")
+	Dam3 = Categoria("Dam Tercera", 1, 6, 2, "Zonas")
 
-# cats = [Cab1c]
+	CabM19 = Categoria("M19 Cab", 1, 7, 4, "Zonas")
+	CabM19Pr = Categoria("M19 Cab Princ", 1, 4, 2, "Zonas")
+	CabM17 = Categoria("M17 Cab", 1, 10, 8, "Zonas")
+	CabM17Pr = Categoria("M17 Cab Princ", 1, 6, 4, "Zonas")
+	CabM15 = Categoria("M15 Cab", 1, 4, 2, "Zonas")
+	CabM15Pr = Categoria("M15 Cab Princ", 1, 13, 8, "Zonas")
+	CabM13 = Categoria("M13 Cab", 1, 4, 2, "Zonas")
+	CabM13Pr = Categoria("M13 Cab Princ", 1, 9, 8, "Zonas")
+	DamM17 = Categoria("M17 Dam", 1, 9, 8, "Zonas")
+	DamM15 = Categoria("M15 Dam", 1, 6, 4, "Zonas")
 
-# PosibleTorneo1 = Torneo(cats, [17, 22], [0,0], [0, 0], [0, 0])
+	categoriasPosadas = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5, Dam1, Dam2, Dam3,
+						 CabM19, CabM19Pr, CabM17, CabM17Pr, CabM15, CabM15Pr, CabM13, 
+						 CabM13Pr, DamM17, DamM15]
 
-# print partidosPosibles(Posadas, PosibleTorneo1)
+	NacDoblePosadas = Torneo(categoriasPosadas, [17,22], [9.5, 22], [9.5,22], [9.5, 15])
 
-Pos = Sede(4)
-Cor = Sede(3)
+	mostrarDatos(NacDoblePosadas, 4)
 
-# EJEMPLO 1
+def SaltaHastaAhora():
 
-Cab1 = Categoria("Cab Primera", 1, 18, 3, 8, "Zonas")  # (nombre, clasifXZona, cantJug, jugXZona, cuadrosCantJug, modoJuego)
-CabInt = Categoria("Cab Int", 1, 18, 3, 8, "Zonas")
-Cab2 = Categoria("Cab Segunda", 1, 18, 3, 8, "Zonas")
-Cab3 = Categoria("Cab Tercera", 1, 18, 3, 8, "Zonas")
-Cab4 = Categoria("Cab Cuarta", 1, 18, 3, 8, "Zonas")
-Cab5 = Categoria("Cab Quinta", 1, 15, 3, 8, "Zonas")
-Cab6 = Categoria("Cab Sexta", 1, 15, 3, 8, "Zonas")
-Cab7 = Categoria("Cab Séptima", 1, 12, 3, 4, "Zonas")
-Dam1 = Categoria("Dam Primera", 1, 6, 3, 4, "Zonas")
-Dam2 = Categoria("Dam Segunda", 1, 9, 3, 4, "Zonas")
-Dam3 = Categoria("Dam Tercera", 1, 12, 3, 4, "Zonas")
+	Cab1 = Categoria("Cab Primera", 1, 19, 32, "ElimDirec")
+	CabInt = Categoria("Cab Int", 1, 18, 32, "ElimDirec")
+	Cab2 = Categoria("Cab Segunda", 1, 33, 64, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 34, 64, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 36, 64, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 26, 32, "ElimDirec")
+	Cab6 = Categoria("Cab Sexta", 1, 29, 32, "ElimDirec")
+	Cab7 = Categoria("Cab Septima", 1, 30, 32, "ElimDirec")
+	Dam1 = Categoria("Dam Primera", 1, 6, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 10, 4, "Zonas")
+	Dam3 = Categoria("Dam Tercera", 1, 15, 8, "Zonas")
 
-cats = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5, Cab6, Cab7, Dam1, Dam2, Dam3]
-NacMenores = Torneo(cats, [17, 22], [9, 22], [9, 22], [9.5,14])
+	categoriasSalta = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5,
+						 Cab6, Cab7, Dam1, Dam2, Dam3]
 
-mostrarDatos(NacMenores, Pos)
+	NacSalta = Torneo(categoriasSalta, [14,22], [14, 23], [9,22], [9.5, 13.5])
 
-# Ver otros Nacionales para ver mas o menos el número de inscriptos y entradas
+	mostrarDatos(NacSalta, 5)
 
-# Es necesario agregar canchas el domingo
-# Para ver mas o menos cuántos inscriptos debo tener, fijarse en el TS de Tucumán
+def SaltaAgregandoMas():
 
+	Cab1 = Categoria("Cab Primera", 1, 18, 16, "ElimDirec")
+	CabInt = Categoria("Cab Int", 1, 14, 16, "ElimDirec")
+	Cab2 = Categoria("Cab Segunda", 1, 30, 32, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 38, 32, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 40, 64, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 30, 32, "ElimDirec")
+	Cab6 = Categoria("Cab Sexta", 1, 28, 32, "ElimDirec")
+	Cab7 = Categoria("Cab Septima", 1, 25, 32, "ElimDirec")
+	Dam1 = Categoria("Dam Primera", 1, 10, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 15, 8, "Zonas")
+	Dam3 = Categoria("Dam Tercera", 1, 9, 4, "Zonas")
 
-# Constatar con los archivos del Tournament que tengo de Posadas para ver si
-# la cantidad de partidos se acerca
+	categoriasSalta = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5,
+						 Cab6, Cab7, Dam1, Dam2, Dam3]
 
-# NAC MENORES CÓRDOBA 2016 ----- REALES: 97 ENTRIES (64 PLAYERS); 183 MATCHES (EN REALIDAD FUE 176), 3 CANCHAS
+	NacSalta = Torneo(categoriasSalta, [14,22], [14, 23], [9,22], [9.5, 13.5])
 
-# NAC TUCUMÁN MAY Y MEN ----- 292 ENTRIES
+	mostrarDatos(NacSalta, 5)
+
+def mdp_mayores_grupos():
+	#59 players, 92 entries, 9 categorías - 3 días, 2 canchas
+
+	Cab1 = Categoria("Cab Primera", 1, 12, 8, "Zonas")
+	CabInt = Categoria("Cab Int", 1, 17, 8, "Zonas") # los primeros y los 3 mejores segundos
+	Cab2 = Categoria("Cab Segunda", 1, 13, 4, "Zonas") # los 4 primeros
+	Cab3 = Categoria("Cab Tercera", 1, 12, 4, "Zonas") # los 4 primeros
+	Cab4 = Categoria("Cab Cuarta", 1, 15, 8, "Zonas") # los 5 primeros y los 3 mejores segundos
+	Cab5 = Categoria("Cab Quinta", 1, 8, 4, "Zonas") # primeros y segundos
+	Cab6 = Categoria("Cab Sexta", 1, 5, 2, "Zonas") # final entre prim y seg
+	Dam1 = Categoria("Dam Primera", 1, 6, 4, "Zonas") # primeras y segundas
+	Dam2 = Categoria("Dam Segunda", 1, 3, 2, "Zonas") # zona única con final
+
+	categorias_mdp = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5,
+						 Cab6, Dam1, Dam2]
+
+	nac_mdp = Torneo(categorias_mdp, [0,0], [13, 22], [9,22], [9.5, 14])
+
+	mostrarDatos(nac_mdp, 2)
+
+def mdp_mayores_2018():
+	# datos día miércoles 18hs
+
+	Cab1 = Categoria("Cab Primera", 1, 28, 16, "Zonas")
+	CabInt = Categoria("Cab Int", 1, 16, 16, "ElimDirec")
+	Cab2 = Categoria("Cab Segunda", 1, 27, 32, "ElimDirec")
+	Cab3 = Categoria("Cab Tercera", 1, 30, 32, "ElimDirec")
+	Cab4 = Categoria("Cab Cuarta", 1, 26, 32, "ElimDirec")
+	Cab5 = Categoria("Cab Quinta", 1, 19, 32, "ElimDirec")
+	Cab6 = Categoria("Cab Sexta", 1, 8, 4, "Zonas")
+	Dam1 = Categoria("Dam Primera", 1, 7, 4, "Zonas")
+	Dam2 = Categoria("Dam Segunda", 1, 10, 4, "Zonas")
+
+	categorias_mdp = [Cab1, CabInt, Cab2, Cab3, Cab4, Cab5,
+						 Cab6, Dam1, Dam2]
+
+	nac_mdp = Torneo(categorias_mdp, [0,0], [13, 22], [9,22], [9.5, 15])
+
+	mostrarDatos(nac_mdp, 4)
+
+mdp_mayores_2018()

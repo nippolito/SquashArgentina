@@ -1,7 +1,0 @@
-> #canchas
-> #partidos jueves, viernes, sábado
-> #partidos domingo (semis y finales)
-> #zonas y #jugadores en cada zona (mejor 3 jugadores que cuatro)
-	((6 * (n/3)) vs (10 * (n/4))) == (2n vs (5/2)n) --> siempre conviene zonas de 3 para disminuir la cantidad de partidos
-> #jugadoresXCat y #categorías
-> #clasificadosXzona y ancho de la zona
