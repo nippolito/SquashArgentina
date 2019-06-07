@@ -16,7 +16,7 @@ def test01ZonesCategoryCalculatesZoneMatchesRight():
 	cuadrosCantJug = 8
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosGrupos() == 3 * 4
 
@@ -26,7 +26,7 @@ def test02ZonesCategoryCalculatesZoneMatchesRight():
 	cuadrosCantJug = 8
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosGrupos() == (3 * 3) + 6 
 
@@ -36,7 +36,7 @@ def test03ZonesCategoryCalculatesZoneMatchesRight():
 	cuadrosCantJug = 8
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosGrupos() == (2 * 3) + (2 * 6)
 
@@ -46,7 +46,7 @@ def test04ZonesCategoryCalculatesZoneMatchesRight():
 	cuadrosCantJug = 8
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosGrupos() == 10
 
@@ -56,7 +56,7 @@ def test05ElimDirecCategoryHasCeroZoneMatches():
 	cuadrosCantJug = 16
 	modoDeJuego = "ElimDirec"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosGrupos() == 0
 
@@ -66,7 +66,7 @@ def test06ZonesCategoryCalculatesMainDrawMatchesRight():
 	cuadrosCantJug = 8
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosCuadros() == cuadrosCantJug - 1
 
@@ -76,7 +76,7 @@ def test07ElimDirecCategoryCalculatesMainDrawMatchesRight():
 	cuadrosCantJug = 16
 	modoDeJuego = "ElimDirec"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosCuadros() == cantJug - 1
 
@@ -86,7 +86,7 @@ def test08CategoryTotalMatchesEqualsMainDrawMatchesPlusZoneMatches():
 	cuadrosCantJug = 16
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosTotales() == Cab1.cantPartidosCuadros() + Cab1.cantPartidosGrupos()
 
@@ -96,7 +96,7 @@ def test09CategoryWithOnlyFinalsHasOnlyOneSundayMatch():
 	cuadrosCantJug = 2
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosDomingo() == 1
 
@@ -106,7 +106,7 @@ def test10CategoryWithSemifinalsHasThreeSundayMatches():
 	cuadrosCantJug = 4
 	modoDeJuego = "Zonas"
 
-	Cab1 = Categoria(nombre, 1, cantJug, cuadrosCantJug, modoDeJuego)
+	Cab1 = Categoria(nombre, cantJug, cuadrosCantJug, modoDeJuego)
 
 	assert Cab1.cantPartidosDomingo() == 3
 
@@ -118,7 +118,7 @@ def test11TournamentWithOneCategoryTotalPlayersEqualsCategoryTotalPlayers():
 	cuadrosCantJug1 = 16
 	modoDeJuego1 = "Zonas"
 
-	Cab1 = Categoria(nombre1, 1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
 
 	tournamentCategories = [Cab1]
 	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
@@ -135,8 +135,8 @@ def test12TournamentWithManyCategoriesCalculatesTotalPlayersRight():
 	modoDeJuego1 = "Zonas"
 	modoDeJuegoInt = "ElimDirec"
 
-	Cab1 = Categoria(nombre1, 1, cantJug1, cuadrosCantJug1, modoDeJuego1)
-	CabInt = Categoria(nombreInt, 1, cantJugInt, cuadrosCantJugInt, modoDeJuegoInt)
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	CabInt = Categoria(nombreInt, cantJugInt, cuadrosCantJugInt, modoDeJuegoInt)
 
 	tournamentCategories = [Cab1, CabInt]
 	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
@@ -149,7 +149,7 @@ def test13TournamentWithOneCategoryTotalZoneMatchesEqualsCategoryTotalZoneMatche
 	cuadrosCantJug1 = 16
 	modoDeJuego1 = "Zonas"
 
-	Cab1 = Categoria(nombre1, 1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
 
 	tournamentCategories = [Cab1]
 	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
@@ -162,7 +162,7 @@ def test14TournamentWithOneCategoryTotalDrawMatchesEqualsCategoryTotalDrawMatche
 	cuadrosCantJug1 = 16
 	modoDeJuego1 = "Zonas"
 
-	Cab1 = Categoria(nombre1, 1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
 
 	tournamentCategories = [Cab1]
 	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
@@ -175,7 +175,7 @@ def test15TournamentWithOneCategoryTotalMatchesEqualsCategoryTotalMatches():
 	cuadrosCantJug1 = 16
 	modoDeJuego1 = "Zonas"
 
-	Cab1 = Categoria(nombre1, 1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
 
 	tournamentCategories = [Cab1]
 	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
@@ -188,9 +188,148 @@ def test16TournamentWithOneCategoryTotalSundayMatchesEqualsCategoryTotalSundayMa
 	cuadrosCantJug1 = 16
 	modoDeJuego1 = "Zonas"
 
-	Cab1 = Categoria(nombre1, 1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
 
 	tournamentCategories = [Cab1]
 	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
 
 	assert myTournament.cantPartidosDomingo() == Cab1.cantPartidosDomingo()
+
+def test17TournamentWithManyCategoriesCalculatesTotalZoneMatchesRight():
+	nombre1 = "Cab Primera"
+	nombreInt = "Cab Int"
+	cantJugInt = 18
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	cuadrosCantJugInt = 32
+	modoDeJuego1 = "Zonas"
+	modoDeJuegoInt = "ElimDirec"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	CabInt = Categoria(nombreInt, cantJugInt, cuadrosCantJugInt, modoDeJuegoInt)
+
+	tournamentCategories = [Cab1, CabInt]
+	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
+
+	assert myTournament.cantPartidosGrupos() == Cab1.cantPartidosGrupos() + CabInt.cantPartidosGrupos()
+
+def test18TournamentWithManyCategoriesCalculatesTotalDrawMatchesRight():
+	nombre1 = "Cab Primera"
+	nombreInt = "Cab Int"
+	cantJugInt = 18
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	cuadrosCantJugInt = 32
+	modoDeJuego1 = "Zonas"
+	modoDeJuegoInt = "ElimDirec"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	CabInt = Categoria(nombreInt, cantJugInt, cuadrosCantJugInt, modoDeJuegoInt)
+
+	tournamentCategories = [Cab1, CabInt]
+	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
+
+	assert myTournament.cantPartidosCuadros() == Cab1.cantPartidosCuadros() + CabInt.cantPartidosCuadros()
+
+def test19TournamentWithManyCategoriesCalculatesTotalMatchesRight():
+	nombre1 = "Cab Primera"
+	nombreInt = "Cab Int"
+	cantJugInt = 18
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	cuadrosCantJugInt = 32
+	modoDeJuego1 = "Zonas"
+	modoDeJuegoInt = "ElimDirec"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	CabInt = Categoria(nombreInt, cantJugInt, cuadrosCantJugInt, modoDeJuegoInt)
+
+	tournamentCategories = [Cab1, CabInt]
+	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
+
+	assert myTournament.cantPartidosTotales() == Cab1.cantPartidosTotales() + CabInt.cantPartidosTotales()
+
+def test20TournamentWithManyCategoriesCalculatesSundayMatchesRight():
+	nombre1 = "Cab Primera"
+	nombreInt = "Cab Int"
+	cantJugInt = 18
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	cuadrosCantJugInt = 32
+	modoDeJuego1 = "Zonas"
+	modoDeJuegoInt = "ElimDirec"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+	CabInt = Categoria(nombreInt, cantJugInt, cuadrosCantJugInt, modoDeJuegoInt)
+
+	tournamentCategories = [Cab1, CabInt]
+	myTournament = Torneo(tournamentCategories, [14,22], [14, 23], [9,22], [9.5, 13.5])
+
+	assert myTournament.cantPartidosDomingo() == Cab1.cantPartidosDomingo() + CabInt.cantPartidosDomingo()
+
+# -------------------- AUXILIARY FUNCTIONS TESTS ----------------------
+
+def test21OneDayTournamentWithOneCourtPossibleMatchesAreCalculatedRight():
+	nombre1 = "Cab Primera"
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	modoDeJuego1 = "Zonas"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+
+	tournamentCategories = [Cab1]
+	myTournament = Torneo(tournamentCategories, [14,22], [0,0], [0,0], [0,0])
+
+	assert partidosPosibles(1, myTournament) == 16
+
+def test22OneDayTournamentWithManyCourtsPossibleMatchesAreCalculatedRight():
+	nombre1 = "Cab Primera"
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	modoDeJuego1 = "Zonas"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+
+	tournamentCategories = [Cab1]
+	myTournament = Torneo(tournamentCategories, [14,22], [0,0], [0,0], [0,0])
+
+	assert partidosPosibles(4, myTournament) == 16 * 4
+
+def test23ManyDaysTournamentWithManyCourtsPossibleMatchesAreCalculatedRight():
+	nombre1 = "Cab Primera"
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	modoDeJuego1 = "Zonas"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+
+	tournamentCategories = [Cab1]
+	myTournament = Torneo(tournamentCategories, [14,22], [13,21], [9.5,22], [9.5,14])
+
+	assert partidosPosibles(4, myTournament) == 16 * 4 + 16 * 4 + 25 * 4 + 9 * 4
+
+def test24TournamentWithOneCourtSundayMatchesAreCalculatedRight():
+	nombre1 = "Cab Primera"
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	modoDeJuego1 = "Zonas"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+
+	tournamentCategories = [Cab1]
+	myTournament = Torneo(tournamentCategories, [14,22], [13,21], [9.5,22], [9.5,14])
+
+	assert domingoPartidosPosibles(1, myTournament) == 9
+
+def test25TournamentWithManyCourtsSundayMatchesAreCalculatedRight():
+	nombre1 = "Cab Primera"
+	cantJug1 = 12
+	cuadrosCantJug1 = 16
+	modoDeJuego1 = "Zonas"
+
+	Cab1 = Categoria(nombre1, cantJug1, cuadrosCantJug1, modoDeJuego1)
+
+	tournamentCategories = [Cab1]
+	myTournament = Torneo(tournamentCategories, [14,22], [13,21], [9.5,22], [9.5,14])
+
+	assert domingoPartidosPosibles(4, myTournament) == 9 * 4

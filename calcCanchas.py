@@ -60,9 +60,8 @@ class Torneo:
 		return self._categorias
 
 class Categoria:
-	def __init__(self, nombre, clasifXZona, cantJug, cuadrosCantJug, modoJuego):
+	def __init__(self, nombre, cantJug, cuadrosCantJug, modoJuego):
 		self._nombre = nombre
-		self._clasifXZona = clasifXZona
 		self._cantJug = cantJug
 		self._cuadrosCantJug = cuadrosCantJug
 		if(modoJuego == "ElimDirec"):
@@ -104,9 +103,6 @@ class Categoria:
 
 	def modoDeJuego(self):
 		return self._modoJuego.modoJuego()
-
-	def clasifPorZona(self):
-		return self._clasifXZona
 
 # ------------- MODO DE JUEGO JERARQUÍA POLIMÓRFICA --------------
 
@@ -167,12 +163,11 @@ class ElimDirecModoCategoria(ModoCategoria):
 	def modoJuego(self):
 		return "ElimDirec"
 
-
 # ----------------------- AUXILIARES ---------------------------
 
 """ función para calcular los partidos posibles 
 según la cantidad de canchas de la sede"""
-def partidosPosibles(cantCanchas, torneo):	  # ya lo testié y funciona perfecto, la última hora no la cuenta sino que finalizan allí
+def partidosPosibles(cantCanchas, torneo):
 	res = 0
 	for i in np.arange(torneo.horasJu()[0], torneo.horasJu()[1], 0.5):
 		res = res + 1 * (cantCanchas)
@@ -202,7 +197,7 @@ def mostrarCatYCant(torneo):
 		elif(ct.modoDeJuego() == "ElimDirec"):
 			print("")
 
-""" función auxiliar para que me muestre todo en consola """
+""" función auxiliar para que muestre todo en consola """
 def mostrarDatos(torneo, cantCanchas):
 	print("\nLa cantidad de canchas en la sede es:", end=" ")
 	print(cantCanchas)
