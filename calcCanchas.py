@@ -10,8 +10,8 @@ class Torneo:
 		self._horasSa = horasSa
 		self._horasDom = horasDom
 
-	""" devuelve cantidad de inscriptxs """
-	def cantInscriptos(self):
+	""" devuelve cantidad de jugadorxs inscriptxs """
+	def cantidadDeJugadores(self):
 		res = 0
 		for category in self._categorias:
 			res = res + category.cantidadDeJugadores()
@@ -19,26 +19,26 @@ class Torneo:
 
 	""" devuelve los partidos totales en fase de grupos
 	de todas las categorías que tienen zonas """
-	def PartTotGrupos(self):
+	def cantPartidosGrupos(self):
 		res = 0
 		for category in self._categorias:
 			res = res + category.cantPartidosGrupos()
 		return res
 
 	""" devuelve los partidos que hay en los cuadros de todas las categorías """
-	def PartTotCuadros(self):
+	def cantPartidosCuadros(self):
 		res = 0
 		for category in self._categorias:
 			res = res + category.cantPartidosCuadros()
 		return res
 
 	""" devuelve los partidos totales de un torneo """
-	def PartidosTotales(self):
-		return self.PartTotGrupos() + self.PartTotCuadros()
+	def cantPartidosTotales(self):
+		return self.cantPartidosGrupos() + self.cantPartidosCuadros()
 
 	""" devuelve la cantidad de partidos totales del día domingo
 	(semifinales y finales) """
-	def DomingoCantPartTot(self):
+	def cantPartidosDomingo(self):
 		res = 0
 		for category in self._categorias:
 			res = res + category.cantPartidosDomingo()
@@ -90,6 +90,9 @@ class Categoria:
 		elif(self.sizeCuadro() > 2):
 			return 3
 
+	def cantPartidosTotales(self):
+		return self.cantPartidosGrupos() + self.cantPartidosCuadros()
+
 	def nombre(self):
 		return self._nombre
 
@@ -105,15 +108,13 @@ class Categoria:
 	def clasifPorZona(self):
 		return self._clasifXZona
 
-"""
-Las siguientes dos clases son para jerarquía polimórfica de modo de juego.
-Faltaría la clase padre que defina la interfaz (y se utilice su init)
-"""
+# ------------- MODO DE JUEGO JERARQUÍA POLIMÓRFICA --------------
 
-class GruposModoCategoria:
+class ModoCategoria:
 	def __init__(self, unaCategoria):
 		self.categoria = unaCategoria
 
+class GruposModoCategoria(ModoCategoria):
 	def cantZonas(self):
 		j = self.categoria.cantidadDeJugadores()
 		if(j == 0):
@@ -152,10 +153,7 @@ class GruposModoCategoria:
 	def modoJuego(self):
 		return "Zonas"
 
-class ElimDirecModoCategoria:
-	def __init__(self, unaCategoria):
-		self.categoria = unaCategoria
-
+class ElimDirecModoCategoria(ModoCategoria):
 	def cantZonas(self):
 		return 0
 
@@ -168,6 +166,9 @@ class ElimDirecModoCategoria:
 
 	def modoJuego(self):
 		return "ElimDirec"
+
+
+# ----------------------- AUXILIARES ---------------------------
 
 """ función para calcular los partidos posibles 
 según la cantidad de canchas de la sede"""
@@ -184,7 +185,7 @@ def partidosPosibles(cantCanchas, torneo):	  # ya lo testié y funciona perfecto
 	return res
 
 """ devuelve los partidos posibles del día domingo (día de semis y finales) """
-def DomingoPartidosPosibles(cantCanchas, torneo):
+def domingoPartidosPosibles(cantCanchas, torneo):
 	res = 0
 	for i in np.arange(torneo.horasDom()[0], torneo.horasDom()[1], 0.5):
 			res = res + 1 * cantCanchas
@@ -212,7 +213,7 @@ def mostrarDatos(torneo, cantCanchas):
 	print("Sábado > " + str(torneo.horasSa()[0]) + " a " + str(torneo.horasSa()[1]) + " hs." , end=" ")
 	print("Domingo > " + str(torneo.horasDom()[0]) + " a " + str(torneo.horasDom()[1]) + " hs.")
 
-	print("\nLa cantidad de inscriptxs entre todas las categorías es: " + (str(torneo.cantInscriptos())))
+	print("\nLa cantidad de inscriptxs entre todas las categorías es: " + (str(torneo.cantidadDeJugadores())))
 
 	print("La cantidad de partidos totales que pueden realizarse es: " + str(partidosPosibles(cantCanchas, torneo)))
 
@@ -220,12 +221,12 @@ def mostrarDatos(torneo, cantCanchas):
 	mostrarCatYCant(torneo)
 	print("")
 
-	print("En total habría en el torneo " + str(torneo.PartTotGrupos()) + " partidos en fase de grupos.")
-	print("En total habría en el torneo " + str(torneo.PartTotCuadros()) + " partidos en fase de eliminación directa.")
-	print("Esto da un total de " + str(torneo.PartidosTotales()) + " partidos en total.")
+	print("En total habría en el torneo " + str(torneo.cantPartidosGrupos()) + " partidos en fase de grupos.")
+	print("En total habría en el torneo " + str(torneo.cantPartidosCuadros()) + " partidos en fase de eliminación directa.")
+	print("Esto da un total de " + str(torneo.cantPartidosTotales()) + " partidos en total.")
 
-	print("\nDía Domingo (SF y F): Total partidos > " + str(torneo.DomingoCantPartTot()) + " partidos." , end=" ")
-	print("Total de canchas > " + str(DomingoPartidosPosibles(cantCanchas, torneo)))
+	print("\nDía Domingo (SF y F): Total partidos > " + str(torneo.cantPartidosDomingo()) + " partidos." , end=" ")
+	print("Total de canchas > " + str(domingoPartidosPosibles(cantCanchas, torneo)))
 
 	print("\n--------------------------------------------------------------------------------")
 
