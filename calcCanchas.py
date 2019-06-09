@@ -2,226 +2,235 @@
 
 import numpy as np
 
-class Torneo:
-	def __init__(self, categorias, horasJu, horasVi, horasSa, horasDom):
-		self._categorias = categorias
-		self._horasJu = horasJu
-		self._horasVi = horasVi
-		self._horasSa = horasSa
-		self._horasDom = horasDom
+
+class Tournament:
+	def __init__(self, categories, hoursThu, hoursFri, hoursSat, hoursSun):
+		self._categories = categories
+		self._hoursThu = hoursThu
+		self._hoursFri = hoursFri
+		self._hoursSat = hoursSat
+		self._hoursSun = hoursSun
 
 	""" devuelve cantidad de jugadorxs inscriptxs """
-	def cantidadDeJugadores(self):
+	def playersAmount(self):
 		res = 0
-		for category in self._categorias:
-			res = res + category.cantidadDeJugadores()
+		for category in self._categories:
+			res = res + category.playersAmount()
 		return res
 
 	""" devuelve los partidos totales en fase de grupos
 	de todas las categorías que tienen zonas """
-	def cantPartidosGrupos(self):
+	def roundRobinMatchesAmount(self):
 		res = 0
-		for category in self._categorias:
-			res = res + category.cantPartidosGrupos()
+		for category in self._categories:
+			res = res + category.roundRobinMatchesAmount()
 		return res
 
 	""" devuelve los partidos que hay en los cuadros de todas las categorías """
-	def cantPartidosCuadros(self):
+	def mainDrawMatchesAmount(self):
 		res = 0
-		for category in self._categorias:
-			res = res + category.cantPartidosCuadros()
+		for category in self._categories:
+			res = res + category.mainDrawMatchesAmount()
 		return res
 
 	""" devuelve los partidos totales de un torneo """
-	def cantPartidosTotales(self):
-		return self.cantPartidosGrupos() + self.cantPartidosCuadros()
+	def totalMatchesAmount(self):
+		return self.roundRobinMatchesAmount() + self.mainDrawMatchesAmount()
 
 	""" devuelve la cantidad de partidos totales del día domingo
 	(semifinales y finales) """
-	def cantPartidosDomingo(self):
+	def sundayMatchesAmount(self):
 		res = 0
-		for category in self._categorias:
-			res = res + category.cantPartidosDomingo()
+		for category in self._categories:
+			res = res + category.sundayMatchesAmount()
 		return res
 
-	def horasJu(self):
-		return self._horasJu
+	def hoursThu(self):
+		return self._hoursThu
 
-	def horasVi(self):
-		return self._horasVi
+	def hoursFri(self):
+		return self._hoursFri
 
-	def horasSa(self):
-		return self._horasSa
+	def hoursSat(self):
+		return self._hoursSat
 
-	def horasDom(self):
-		return self._horasDom
+	def hoursSun(self):
+		return self._hoursSun
 
-	def categorias(self):
-		return self._categorias
+	def categories(self):
+		return self._categories
 
-class Categoria:
-	def __init__(self, nombre, cantJug, cuadrosCantJug, modoJuego):
-		self._nombre = nombre
-		self._cantJug = cantJug
-		self._cuadrosCantJug = cuadrosCantJug
-		if(modoJuego == "ElimDirec"):
-			self._modoJuego = ElimDirecModoCategoria(self)
-		elif(modoJuego == "Zonas"):
-			self._modoJuego = GruposModoCategoria(self)
+
+class Category:
+	def __init__(self, name, playersAmount, mainDrawPlayersAmount, gameMode):
+		self._name = name
+		self._playersAmount = playersAmount
+		self._mainDrawPlayersAmount = mainDrawPlayersAmount
+		if gameMode == "ElimDirec":
+			self._gameMode = OnlyMainDrawCategoryGameMode(self)
+		elif gameMode == "Zonas":
+			self._gameMode = RoundRobinCategoryGameMode(self)
 
 	""" calcula cantidad de zonas en categoría minimizando la cantidad de partidos
 	(i.e, si pueden ser todas de 3 mejor, y sino algunas de 4 y todas las restantes de 3,
 	exceptuando el caso en el que son 5 jugadorxs)"""
-	def cantZonas(self):
-		return self._modoJuego.cantZonas()
+	def roundRobinGroupsAmount(self):
+		return self._gameMode.roundRobinGroupsAmount()
 
 	""" calcula cantidad de partidos que hay en la fase de grupos"""
-	def cantPartidosGrupos(self):
-		return self._modoJuego.cantPartidosGrupos()
+	def roundRobinMatchesAmount(self):
+		return self._gameMode.roundRobinMatchesAmount()
 
 	""" calcula la cantidad de partidos que hay en los cuadros"""
-	def cantPartidosCuadros(self):
-		return self._modoJuego.cantPartidosCuadros()
+	def mainDrawMatchesAmount(self):
+		return self._gameMode.mainDrawMatchesAmount()
 
-	def cantPartidosDomingo(self):
-		if(self.sizeCuadro() == 2):
+	def sundayMatchesAmount(self):
+		if self.mainDrawSize() == 2:
 			return 1
-		elif(self.sizeCuadro() > 2):
+		elif self.mainDrawSize() > 2:
 			return 3
 
-	def cantPartidosTotales(self):
-		return self.cantPartidosGrupos() + self.cantPartidosCuadros()
+	def totalMatchesAmount(self):
+		return self.roundRobinMatchesAmount() + self.mainDrawMatchesAmount()
 
-	def nombre(self):
-		return self._nombre
+	def name(self):
+		return self._name
 
-	def cantidadDeJugadores(self):
-		return self._cantJug
+	def playersAmount(self):
+		return self._playersAmount
 
-	def sizeCuadro(self):
-		return self._cuadrosCantJug
+	def mainDrawSize(self):
+		return self._mainDrawPlayersAmount
 
-	def modoDeJuego(self):
-		return self._modoJuego.modoJuego()
+	def gameMode(self):
+		return self._gameMode.gameMode()
 
 # ------------- MODO DE JUEGO JERARQUÍA POLIMÓRFICA --------------
 
-class ModoCategoria:
-	def __init__(self, unaCategoria):
-		self.categoria = unaCategoria
 
-class GruposModoCategoria(ModoCategoria):
-	def cantZonas(self):
-		j = self.categoria.cantidadDeJugadores()
-		if(j == 0):
+class CategoryGameMode:
+	def __init__(self, aCategory):
+		self.category = aCategory
+
+
+class RoundRobinCategoryGameMode(CategoryGameMode):
+	def roundRobinGroupsAmount(self):
+		j = self.category.playersAmount()
+		if j == 0:
 			return 0
-		elif((j % 3) == 0):  # todas de 3
+		elif (j % 3) == 0:  # todas de 3
 			return j / 3
-		elif(j == 5):
+		elif j == 5:
 			return 1
-		elif((j % 3) == 1 and j > 1):	# una de 4 y las restantes de 3
+		elif (j % 3) == 1 and j > 1:	# una de 4 y las restantes de 3
 			return 1 + (j - 4) / 3
-		elif((j % 3) == 2 and j > 5):	# dos de 4 y las restantes de 3
+		elif (j % 3) == 2 and j > 5:	# dos de 4 y las restantes de 3
 			return 2 + (j - 8) / 3
 		else:
 			print( "No se pueden hacer grupos con 1 o 2 inscriptxs")
 
-	def cantPartidosGrupos(self):
-		cantidadDeZonas = self.categoria.cantZonas()
-		j = self.categoria.cantidadDeJugadores()
-		if(j == 0):
+	def roundRobinMatchesAmount(self):
+		cantidadDeZonas = self.category.roundRobinGroupsAmount()
+		j = self.category.playersAmount()
+		if j == 0:
 			return 0
-		elif((j % 3) == 0):  # todas de 3
+		elif (j % 3) == 0:  # todas de 3
 			return 3 * cantidadDeZonas
-		elif(j == 5):
+		elif j == 5:
 			return 10
-		elif((j % 3) == 1 and j > 1):		# una de 4 y las restantes de 3
+		elif (j % 3) == 1 and j > 1:		# una de 4 y las restantes de 3
 			return 6 + (cantidadDeZonas - 1) * 3
-		elif((j % 3) == 2 and j > 5):		# dos de 4 y las restantes de 3
+		elif (j % 3) == 2 and j > 5:		# dos de 4 y las restantes de 3
 			return 6 * 2 + (cantidadDeZonas - 2) * 3
 		else:
 			print( "No se pueden hacer grupos con 1 o 2 inscriptxs")
 
-	def cantPartidosCuadros(self):
+	def mainDrawMatchesAmount(self):
 		# si hay grupos se supone que el cuadro final estará completo
-		return self.categoria.sizeCuadro() - 1
+		return self.category.mainDrawSize() - 1
 
-	def modoJuego(self):
+	def gameMode(self):
 		return "Zonas"
 
-class ElimDirecModoCategoria(ModoCategoria):
-	def cantZonas(self):
+
+class OnlyMainDrawCategoryGameMode(CategoryGameMode):
+	def roundRobinGroupsAmount(self):
 		return 0
 
-	def cantPartidosGrupos(self):
+	def roundRobinMatchesAmount(self):
 		return 0
 
-	def cantPartidosCuadros(self):
+	def mainDrawMatchesAmount(self):
 		# el cuadro no necesariamente esté lleno, así que se calcula según #jugadores
-		return self.categoria.cantidadDeJugadores() - 1
+		return self.category.playersAmount() - 1
 
-	def modoJuego(self):
+	def gameMode(self):
 		return "ElimDirec"
 
 # ----------------------- AUXILIARES ---------------------------
 
+
 """ función para calcular los partidos posibles 
 según la cantidad de canchas de la sede"""
-def partidosPosibles(cantCanchas, torneo):
+def possibleMatches(cantCanchas, torneo):
 	res = 0
-	for i in np.arange(torneo.horasJu()[0], torneo.horasJu()[1], 0.5):
-		res = res + 1 * (cantCanchas)
-	for i in np.arange(torneo.horasVi()[0], torneo.horasVi()[1], 0.5):
-		res = res + 1 * (cantCanchas)
-	for i in np.arange(torneo.horasSa()[0], torneo.horasSa()[1], 0.5):
-		res = res + 1 * (cantCanchas)
-	for i in np.arange(torneo.horasDom()[0], torneo.horasDom()[1], 0.5):
-		res = res + 1 * (cantCanchas)
+	for i in np.arange(torneo.hoursThu()[0], torneo.hoursThu()[1], 0.5):
+		res = res + 1 * cantCanchas
+	for i in np.arange(torneo.hoursFri()[0], torneo.hoursFri()[1], 0.5):
+		res = res + 1 * cantCanchas
+	for i in np.arange(torneo.hoursSat()[0], torneo.hoursSat()[1], 0.5):
+		res = res + 1 * cantCanchas
+	for i in np.arange(torneo.hoursSun()[0], torneo.hoursSun()[1], 0.5):
+		res = res + 1 * cantCanchas
 	return res
+
 
 """ devuelve los partidos posibles del día domingo (día de semis y finales) """
-def domingoPartidosPosibles(cantCanchas, torneo):
+def possibleMatchesSunday(cantCanchas, torneo):
 	res = 0
-	for i in np.arange(torneo.horasDom()[0], torneo.horasDom()[1], 0.5):
-			res = res + 1 * cantCanchas
+	for i in np.arange(torneo.hoursSun()[0], torneo.hoursSun()[1], 0.5):
+		res = res + 1 * cantCanchas
 	return res
 
+
 """ f auxiliar para mostrar los datos de todas las categorías """
-def mostrarCatYCant(torneo):
-	for ct in torneo.categorias():
-		print( "> CAT: " + ct.nombre() + " -- Inscriptxs: " + str(ct.cantidadDeJugadores()), end=" ")
-		print( "> Modo juego: " + str(ct.modoDeJuego()), end=" ")
+def showCategoryAndAmount(torneo):
+	for ct in torneo.categories():
+		print("> CAT: " + ct.name() + " -- Inscriptxs: " + str(ct.playersAmount()), end=" ")
+		print("> Modo juego: " + str(ct.gameMode()), end=" ")
 		# este if se podría reemplazar utilizando la jerarquía polimórfica
-		if(ct.modoDeJuego() == "Zonas"):
-			print("-- #Jug en llaves: " + str(ct.sizeCuadro()))
-		elif(ct.modoDeJuego() == "ElimDirec"):
+		if ct.gameMode() == "Zonas":
+			print("-- #Jug en llaves: " + str(ct.mainDrawSize()))
+		elif ct.gameMode() == "ElimDirec":
 			print("")
 
+
 """ función auxiliar para que muestre todo en consola """
-def mostrarDatos(torneo, cantCanchas):
+def showData(torneo, cantCanchas):
 	print("\nLa cantidad de canchas en la sede es:", end=" ")
 	print(cantCanchas)
 
 	print("Los horarios son:", end=" ")
-	print("Jueves > " + str(torneo.horasJu()[0]) + " a " + str(torneo.horasJu()[1]) + " hs.", end=" ")
-	print("Viernes > " + str(torneo.horasVi()[0]) + " a " + str(torneo.horasVi()[1]) + " hs." , end=" ")
-	print("Sábado > " + str(torneo.horasSa()[0]) + " a " + str(torneo.horasSa()[1]) + " hs." , end=" ")
-	print("Domingo > " + str(torneo.horasDom()[0]) + " a " + str(torneo.horasDom()[1]) + " hs.")
+	print("Jueves > " + str(torneo.hoursThu()[0]) + " a " + str(torneo.hoursThu()[1]) + " hs.", end=" ")
+	print("Viernes > " + str(torneo.hoursFri()[0]) + " a " + str(torneo.hoursFri()[1]) + " hs.", end=" ")
+	print("Sábado > " + str(torneo.hoursSat()[0]) + " a " + str(torneo.hoursSat()[1]) + " hs.", end=" ")
+	print("Domingo > " + str(torneo.hoursSun()[0]) + " a " + str(torneo.hoursSun()[1]) + " hs.")
 
-	print("\nLa cantidad de inscriptxs entre todas las categorías es: " + (str(torneo.cantidadDeJugadores())))
+	print("\nLa cantidad de inscriptxs entre todas las categorías es: " + (str(torneo.playersAmount())))
 
-	print("La cantidad de partidos totales que pueden realizarse es: " + str(partidosPosibles(cantCanchas, torneo)))
+	print("La cantidad de partidos totales que pueden realizarse es: " + str(possibleMatches(cantCanchas, torneo)))
 
 	print("")
-	mostrarCatYCant(torneo)
+	showCategoryAndAmount(torneo)
 	print("")
 
-	print("En total habría en el torneo " + str(torneo.cantPartidosGrupos()) + " partidos en fase de grupos.")
-	print("En total habría en el torneo " + str(torneo.cantPartidosCuadros()) + " partidos en fase de eliminación directa.")
-	print("Esto da un total de " + str(torneo.cantPartidosTotales()) + " partidos en total.")
+	print("En total habría en el torneo " + str(torneo.roundRobinMatchesAmount()) + " partidos en fase de grupos.")
+	print("En total habría en el torneo " + str(torneo.mainDrawMatchesAmount()) + " partidos en fase de eliminación directa.")
+	print("Esto da un total de " + str(torneo.totalMatchesAmount()) + " partidos en total.")
 
-	print("\nDía Domingo (SF y F): Total partidos > " + str(torneo.cantPartidosDomingo()) + " partidos." , end=" ")
-	print("Total de canchas > " + str(domingoPartidosPosibles(cantCanchas, torneo)))
+	print("\nDía Domingo (SF y F): Total partidos > " + str(torneo.sundayMatchesAmount()) + " partidos." , end=" ")
+	print("Total de canchas > " + str(possibleMatchesSunday(cantCanchas, torneo)))
 
 	print("\n--------------------------------------------------------------------------------")
 
